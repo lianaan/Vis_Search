@@ -36,9 +36,9 @@ All analyses were performed on the `alldata` structs. Within each subject and co
 - The figures below show summary statistics (points) and model predictions (shade) for Target Localization (cond 2 and 4) and Target Detection (cond 1 and 3) for Experiment 1 and Model 1.
 
 
-![Exp 1 Localization data: summary statistics and model 1 fits](link-to-image) 
+![Exp 1 Localization data: summary statistics and model 1 fits](https://github.com/lianaan/Vis_Search/blob/master/LOC_full_figure_1_model_1_type_2_exp_1.pdf) 
 
-![Exp 1 Detection data: summary statistics and model 1 fits](link-to-image) 
+![Exp 1 Detection data: summary statistics and model 1 fits](https://github.com/lianaan/Vis_Search/blob/master/DET_full_figure_1_model_1_type_1_exp_1.pdf) 
 
 
 
