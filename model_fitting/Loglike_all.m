@@ -129,10 +129,10 @@ if (type==2) | (type==3)
         stims     = repmat(sdata_le(:,1:N),[1,1, Nsamp]); % Read in data -keep all 6 vals, also nans'. and replicate
         x         = qrandvm(stims,kappa,[length(idx) N Nsamp]); %circ_vmrnd(stims,kappa);
         dec_var = -log(besseli(0,kappa,1))-kappa+kappa.*cos(bsxfun(@minus,x,target_l(idx)));
-        if mi == 1
+        if (mi == 1) | (mi == 2 & type == 3) % do not add decision noise to localization in the joint type
             [mx,dd]   = max(dec_var,[],2);
             pc(idx)   = mean(bsxfun(@eq,dd, Ldata_le(idx)),3);
-        elseif mi == 2
+        elseif (mi == 2) & (type == 2)
             post_L_given_x = bsxfun(@rdivide, exp(dec_var), sum(exp(dec_var),2));
             post_L_given_x_noisy = post_L_given_x.^alpha;
             post_L_given_x_noisy = bsxfun(@rdivide, post_L_given_x_noisy, sum(post_L_given_x_noisy,2)); %renormalize
