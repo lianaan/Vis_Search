@@ -73,8 +73,8 @@ tau_min=log(10);
 tau_max=log(100);
 pp_min=0.48;%0.4;
 pp_add=0.15; %0.3;
-lapse_min=0.001;
-lapse_add=0.999; %0.6%0.4;
+%lapse_min=0.001;
+%lapse_add=0.999; %0.6%0.4;
 
 
 PLB = [Jbar_min Jbar_min Jbar_min Jbar_min tau_min ];  % Plausible lower bound
@@ -84,14 +84,14 @@ UB = PUB;    % Upper bound
 if ismember(type, [1, 3]) 
     PLB = [PLB pp_min];  % Plausible lower bound
     PUB = [PUB pp_min+pp_add];  % Plausible upper bound
-    LB = [LB lapse_min]; %-Inf(1,nvars);     % Lower bound
-    UB = [UB lapse_min+lapse_add];
+    LB = [LB 0]; %-Inf(1,nvars);     % Lower bound
+    UB = [UB 1];
 end
 if mi == 2
-    PLB = [PLB 0];
+    PLB = [PLB log(0.001)];
     PUB = [PUB log(100)]; %max power to raise posterior
-    LB = [LB 0];   % Lower bound
-    UB = [UB log(500)];   % Upper bound
+    LB = PLB;   % Lower bound
+    UB = PUB;   % Upper bound
 end
 
 
