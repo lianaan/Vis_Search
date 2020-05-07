@@ -35,7 +35,7 @@ for cond = 1:2
                     dec_var_glob(k1,k2) = squeeze(log(mean(exp([dec_var1(k1) dec_var2(k2)]),2))); %+ log(pp/(1-pp)));
                 end
             end
-            imagesc(xt1/2,xt2/2, (dec_var_glob > 0)); hold on;
+            imagesc(xt1/2,xt2/2, (dec_var_glob > 0)'); hold on;
             colormap(gray)
             set(gca, 'yDir', 'Normal')
             box off
@@ -64,7 +64,7 @@ for cond = 1:2
                 end
             end
             
-            imagesc(xt1/2,xt2/2,  1-(dec_var_loc1)) ; hold on;
+            imagesc(xt1/2,xt2/2,  (dec_var_loc1)') ; hold on;
             colormap(gray)
             set(gca, 'yDir', 'Normal')
             box off
