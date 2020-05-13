@@ -41,125 +41,18 @@ for sbjid = 1: size(mdlALL,1)
     end
 end
 %%
-close all;
-figure
-eb_w = 0.12;%errorbar width
-eb_t = 0.24; %errorbar line thickness
-fontsz = 13;
-sz_dot = 1.2;
 
-cond_order = [2 4 1 3];
-guttera = [0.06 0.09];
-marginsa = [0.08 0.06 0.12  0.11]; %left right bottom top
-log_regr_col = [255 255 255; 77 0 75; 140 107 177; 158 188 218]/255;
 
-set(gcf, 'Position', [100 100 550 340])
+
+
 diff_regr_models_AIC = NaN(size(regr_models_AIC));
 diff_regr_models_AIC(:,:,1:4) = bsxfun(@minus,regr_models_AIC(:,:,1), regr_models_AIC(:,:,1:4) );
 diff_regr_models_AIC(:,:,5:8) = bsxfun(@minus, regr_models_AIC(:,:,5:8), regr_models_AIC(:,:,5));
-
 
 diff_regr_models_BIC = NaN(size(regr_models_BIC));
 diff_regr_models_BIC(:,:,1:4) = bsxfun(@minus,regr_models_BIC(:,:,1), regr_models_BIC(:,:,1:4) );
 diff_regr_models_BIC(:,:,5:8) = bsxfun(@minus, regr_models_BIC(:,:,5:8), regr_models_BIC(:,:,5));
 
-
-for cond = 1 : Ncond
-    
-    tight_subplot(4,4,1,cond, guttera, marginsa)
-    for rmi = 1 :4% length(indi_rm)
-        bar(rmi, mean(diff_regr_models_AIC(:,cond_order(cond),rmi),1), std(diff_regr_models_AIC(:,cond_order(cond),rmi),1), 'FaceColor', log_regr_col(rmi,:),'EdgeColor',log_regr_col(rmi,:), 'BarWidth', 0.5); hold on;
-        ei(rmi) = errorbar(rmi,  mean(diff_regr_models_AIC(:,cond_order(cond),rmi),1),std(diff_regr_models_AIC(:,cond_order(cond),rmi),1)/sqrt(Nsubj),...
-            'o','MarkerSize', sz_dot, 'MarkerFaceColor', 'k', 'MarkerEdgeColor', 'k','Color', 'k', 'LineWidth',1.3); hold on;
-        errorbarT(ei(rmi),eb_w,eb_t)
-        box off
-        
-    end
-    xlim([0.5 4.5])
-    ylim([-50 70])
-    set(gca, 'tickdir', 'out')
-    set(gca,'ticklength', [0.025 0.025] )
-    set(gca, 'xtick', [1:1:4])
-    set(gca, 'xticklabels', {'1','2','3','4','5','6','7','8'},'FontName','Helvetica', 'FontSize', 0.7*fontsz);
-    set(gca, 'ytick', [-50:30:70])
-    
-    
-    if cond == 1
-        %ylabel( '\Delta AIC', 'FontName','Helvetica', 'FontSize', 0.9*fontsz)
-        ylabel( 'KID AIC', 'FontName','Helvetica', 'FontSize', 0.9*fontsz)
-    end
-    
-    tight_subplot(4,4,2,cond, guttera, marginsa)
-    for rmi = 1 :4% length(indi_rm)
-        bar(rmi, mean(diff_regr_models_BIC(:,cond_order(cond),rmi),1), std(diff_regr_models_BIC(:,cond_order(cond),rmi),1), 'FaceColor', log_regr_col(rmi,:),'EdgeColor',log_regr_col(rmi,:), 'BarWidth', 0.5); hold on;
-        ei(rmi) = errorbar(rmi,  mean(diff_regr_models_BIC(:,cond_order(cond),rmi),1),std(diff_regr_models_BIC(:,cond_order(cond),rmi),1)/sqrt(Nsubj),...
-            'o','MarkerSize', sz_dot, 'MarkerFaceColor', 'k', 'MarkerEdgeColor', 'k','Color', 'k', 'LineWidth',1.3); hold on;
-        
-        errorbarT(ei(rmi),eb_w,eb_t)
-        box off
-        
-    end
-    xlim([0.5 4.5])
-    ylim([-50 70])
-    set(gca, 'tickdir', 'out')
-    set(gca,'ticklength', [0.025 0.025] )
-    set(gca, 'xtick', [1:1:4])
-    set(gca, 'xticklabels', {'1','2','3','4','5','6','7','8'},'FontName','Helvetica', 'FontSize', 0.7*fontsz);
-    set(gca, 'ytick', [-50:30:70])
-    if cond == 1
-        ylabel( 'KID BIC', 'FontName','Helvetica', 'FontSize', 0.9*fontsz)
-    end
-    
-    
-    tight_subplot(4,4,3,cond, guttera, marginsa)
-    for rmi = 5 : length(indi_rm)
-        bar(rmi, mean(diff_regr_models_AIC(:,cond_order(cond),rmi),1), std(diff_regr_models_AIC(:,cond_order(cond),rmi),1), 'FaceColor', log_regr_col(rmi-4,:),'EdgeColor',log_regr_col(rmi-4,:), 'BarWidth', 0.5); hold on;
-        ei(rmi) = errorbar(rmi,  mean(diff_regr_models_AIC(:,cond_order(cond),rmi),1),std(diff_regr_models_AIC(:,cond_order(cond),rmi),1)/sqrt(Nsubj),...
-            'o','MarkerSize', sz_dot, 'MarkerFaceColor', 'k', 'MarkerEdgeColor', 'k','Color', 'k', 'LineWidth',1.3); hold on;
-        errorbarT(ei(rmi),eb_w,eb_t)
-        box off
-        
-        
-    end
-    xlim([4.5 8.5])
-    ylim([-50 70])
-    set(gca, 'tickdir', 'out')
-    set(gca,'ticklength', [0.025 0.025] )
-    set(gca, 'xtick', [5:1:8])
-    set(gca, 'xticklabels', {'1','2','3','4'},'FontName','Helvetica', 'FontSize', 0.7*fontsz);
-    set(gca, 'ytick', [-50:30:70])
-    if cond == 1
-        ylabel( 'KOD AIC', 'FontName','Helvetica', 'FontSize', 0.9*fontsz)
-    end
-    
-    tight_subplot(4,4,4,cond, guttera, marginsa)
-    for rmi = 5 : length(indi_rm)
-        bar(rmi, mean(diff_regr_models_BIC(:,cond_order(cond),rmi),1), std(diff_regr_models_BIC(:,cond_order(cond),rmi),1), 'FaceColor', log_regr_col(rmi-4,:),'EdgeColor',log_regr_col(rmi-4,:), 'BarWidth', 0.5); hold on;
-        ei(rmi) = errorbar(rmi,  mean(diff_regr_models_BIC(:,cond_order(cond),rmi),1),std(diff_regr_models_BIC(:,cond_order(cond),rmi),1)/sqrt(Nsubj),...
-            'o','MarkerSize', sz_dot, 'MarkerFaceColor', 'k', 'MarkerEdgeColor', 'k','Color', 'k', 'LineWidth',1.3); hold on;
-        
-        errorbarT(ei(rmi),eb_w,eb_t)
-        box off
-        
-    end
-    xlim([4.5 8.5])
-    ylim([-50 70])
-    set(gca, 'tickdir', 'out')
-    set(gca,'ticklength', [0.025 0.025] )
-    set(gca, 'xtick', [5:1:8])
-    set(gca, 'xticklabels', {'1','2','3','4'},'FontName','Helvetica', 'FontSize', 0.7*fontsz);
-    set(gca, 'ytick', [-50:30:70])
-    
-    xlabel('Regressor', 'FontName','Helvetica', 'FontSize', 0.9*fontsz)
-    
-    if cond == 1
-        ylabel( 'KOD BIC', 'FontName','Helvetica', 'FontSize', 0.9*fontsz)
-    end
-    
-end
-%%
-psname =  ['Regr_models_KID_KOD_comparison_Exp',num2str(exp_i),'.pdf']
-%print_pdf(psname)
 
 
 %%
@@ -196,6 +89,14 @@ end
 %%
 figure
 set(gcf, 'Position', [100 100 450 490])
+eb_w = 0.12;%errorbar width
+eb_t = 0.24; %errorbar line thickness
+fontsz = 13;
+sz_dot = 1.2;
+
+cond_order = [2 4 1 3];
+
+log_regr_col = [255 255 255; 77 0 75; 140 107 177; 158 188 218]/255;
 if exp_i == 1
     ylim_min1 = -200; ylim_max1 = 800;
     ylim_min2 = -500; ylim_max2 = 190;
