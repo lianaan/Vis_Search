@@ -1,6 +1,5 @@
 function TD_TL_model_fitting(mpr_index)
 
-%exp_i, type
 Nexp = 2;
 Nmodels = 2; %1 wo decision noise, 2: w decision noise
 Ntypes = 3;
@@ -9,27 +8,25 @@ Ntypes = 3;
 % type = 3  % fit jointly det and loc data
 
 if mpr_index < 1320 % exp 1
-exp_i = 1
-Nsubjects = 11;
+    exp_i = 1
+    Nsubjects = 11;
 else % exp 2
-exp_i = 2
-Nsubjects = 7;
-
+    exp_i = 2
+    Nsubjects = 6; 
+    
 end
-
-
 
 if exp_i == 1
-load('alldata.mat')
+    load('alldata_exp1.mat')
 elseif exp_i == 2
-load('alldata_v2.mat')
-mpr_index = mpr_index - 1320; % 2 models *3 types * 11 subjects for exp1 * 20 runs
-% 2 models * 3 types * 7 subjects for exp 2 * 20 runs = 840
+    load('alldata_exp2.mat')
+    mpr_index = mpr_index - 1320; % 2 models *3 types * 11 subjects for exp1 * 20 runs
+    % 2 models * 3 types * 6 subjects for exp 2 * 20 runs = 720 % 1320+720 = 2040
 end
-Nruns = 20;
+Nruns = 1200;
 
 
-
+% unpack mpr_index
 mi = mod(floor(([mpr_index]-0)/(Ntypes*Nsubjects*Nruns)), Nmodels)+1 % model index
 type = mod(floor(([mpr_index]-0)/(Nsubjects*Nruns)), Ntypes)+1
 par = mod(floor(([mpr_index]-0)/Nruns), Nsubjects)+1 % subject index
@@ -38,7 +35,7 @@ runi = mod(([mpr_index]-0),Nruns)+1  % model fitting run index, bads needs sever
 
 rng(runi);
 
-model_pred = 0; %if we want the model predictions to be computed 
+
 
 addpath('/bads-dev-master/')
 options = bads('defaults');              % Default options
@@ -67,24 +64,22 @@ if mi == 2
 end
 
 
-Jbar_min=log(1.1); %added log to ensure matched parametrization across dimensions. Luigi 09 December 2016
-Jbar_max=log(100);
-tau_min=log(10);
-tau_max=log(100);
-pp_min=0.48;%0.4;
-pp_add=0.15; %0.3;
-%lapse_min=0.001;
-%lapse_add=0.999; %0.6%0.4;
+Jbar_min=log(1.1); %added log to ensure matched parametrization across dimensions
+Jbar_max=log(200);
+tau_min=log(1.1); 
+tau_max=log(200);
+pp_min=0.48;
+pp_add=0.15; 
 
 
 PLB = [Jbar_min Jbar_min Jbar_min Jbar_min tau_min ];  % Plausible lower bound
 PUB = [Jbar_max Jbar_max Jbar_max Jbar_max tau_max ];  % Plausible upper bound
 LB = PLB;    % Lower bound
 UB = PUB;    % Upper bound
-if ismember(type, [1, 3]) 
+if ismember(type, [1, 3])
     PLB = [PLB pp_min];  % Plausible lower bound
     PUB = [PUB pp_min+pp_add];  % Plausible upper bound
-    LB = [LB 0]; %-Inf(1,nvars);     % Lower bound
+    LB = [LB 0];      % Lower bound
     UB = [UB 1];
 end
 if mi == 2
@@ -95,7 +90,7 @@ if mi == 2
 end
 
 
-params_fit=nan(4,nvars); %Only joint model!!
+params_fit=nan(4,nvars); %Only joint model
 pred=nan(4, Ntrials);
 
 
@@ -111,24 +106,15 @@ for cond=[1 3]
     if type == 1
         fun= @(pars) -sum(sum(Loglike_all(pars, {data_d},mi, type)))
         [params_fit(cond,:), nll(cond), exitflag, output, funValues,gpstruct]=bads(fun,start_pars,LB,UB,PLB,PUB,options);
-        if model_pred
-            pred(cond,:)=Predict_all(params_fit(cond,:), {data_d},mi, type)';
-        end
-        
+    
     elseif type == 2
         fun= @(pars) -sum(sum(Loglike_all(pars,  {data_l},mi, type)))
         [params_fit(cond+1,:), nll(cond+1), exitflag, output, funValues,gpstruct]=bads(fun,start_pars,LB,UB,PLB,PUB,options);
-        if model_pred
-            pred(cond+1,:)=Predict_all(params_fit(cond+1,:), {data_l},mi, type)';
-        end
-        
+                
     elseif type == 3
         fun= @(pars) -sum(sum(Loglike_all(pars, {data_d, data_l},mi, type)))
         [params_fit(cond,:), nll(cond), exitflag, output, funValues,gpstruct]=bads(fun,start_pars,LB,UB,PLB,PUB,options);
-        if model_pred
-            pred(cond:cond+1,:)=Predict_all(params_fit(cond,:), {data_d, data_l},mi, type)';
-        end
-        
+                
     end
     
 end
