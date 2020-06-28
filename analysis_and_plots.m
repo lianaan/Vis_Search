@@ -93,7 +93,7 @@ b_fit_all = nan(Nsubj, Ncond, 3,3);  %we decided to do several regressions
 curr_dir = pwd;
 
 cd([curr_dir, '/model_fitting/'])
-load(['nll_params_best_all_2022.mat'])
+load(['nll_params_best_all.mat'])
 cd ..
 
 n_types = 3;
